@@ -9,7 +9,13 @@ def parse_links():
     return response.json()['links']["flickr"]['original']
 
 
-def download_img(num_pic, link):
+def parse_links_hubble():
+    url = 'http://hubblesite.org/api/v3/image/1'
+    response = requests.get(url)
+    return response.json()["image_files"]
+
+
+def fetch_spacex_last_launch(num_pic, link):
     response = requests.get(link)
     folder = os.path.join(os.getcwd(), 'images', f"spacex{num_pic}.jpg")
     with open(folder, 'wb') as file:
@@ -20,4 +26,5 @@ if __name__ == "__main__":
     base_url = 'https://api.spacexdata.com/v3'
     Path(os.getcwd(), 'images').mkdir(parents=True, exist_ok=True)
     for num_pic, link in enumerate(parse_links(), 1):
-        download_img(num_pic, link)
+        fetch_spacex_last_launch(num_pic, link)
+    print(parse_links_hubble())
