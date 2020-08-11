@@ -1,3 +1,2 @@
 requests==2.24.0
 Pillow==7.2.0
-instabot==0.117.0
