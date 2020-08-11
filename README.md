@@ -2,23 +2,19 @@
  
 
 ## Описание проекта.   
-Этот проект позволяет...
-## Пример использования.   
-
-![](example.gif)  
+Этот проект позволяет загружать в инстаграм фото сделанные спутником [Hubble](http://hubblesite.org/api/documentation).    
    
 ## Подготовка к запуску.  
 Установить библиотеки командой.  
 ```
 pip install -r requirements.txt  
-```   
-**Пример**  
-```
+
 ....   
 ```
+    
+Зарегистрируйтесь в [instagram](https://www.instagram.com/accounts/emailsignup/).    
 
 ## Запуск кода.  
 ```
-python3 inst_parser.py    
+python3 inst_parser.py --username rdepocode --password qwerty10
 ```
-   
