@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from urllib.parse import urljoin
 import requests
+from PIL import Image
 
 
 def parse_ids():
@@ -45,7 +46,12 @@ def download_content(link, id):
 if __name__ == "__main__":
     Path(os.getcwd(), 'images').mkdir(parents=True, exist_ok=True)
     ids = parse_ids()
-    for id in ids:
-        links = parse_link_hubble(id)
-        link = choice_better_img(links)
-        download_content(link, id)
+    id = 4001
+    #for id in ids:
+    links = parse_link_hubble(id)
+    link = choice_better_img(links)
+    filename_extension = link.split('.')[-1]
+    download_content(link, id)
+    image = Image.open(f"images/{id}.{filename_extension}")
+    image.thumbnail((1080, 1080))
+    image.save(f"images/{id}.png")
