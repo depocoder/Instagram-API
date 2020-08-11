@@ -1,9 +1,12 @@
 import os
 from pathlib import Path
+import argparse
+import time
+from io import open
 from urllib.parse import urljoin
 import requests
 from PIL import Image
-import instabot
+from instabot import Bot
 
 def parse_ids():
     url = 'http://hubblesite.org/api/v3/images/wallpaper'
@@ -44,6 +47,15 @@ def download_content(link, id):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--username', nargs='?',
+                        help='')
+    parser.add_argument('--password', nargs='?',
+                        help='')
+
+    args = parser.parse_args()
+    bot = Bot()
+    bot.login(username=args.username, password=args.password)
     Path(os.getcwd(), 'images').mkdir(parents=True, exist_ok=True)
     ids = parse_ids()
     for id in ids:
@@ -58,3 +70,6 @@ if __name__ == "__main__":
             path = os.path.join(os.getcwd(), 'images', f'{id}.png')
             os.remove(path)
         image.save(f"images/{id}.jpg")
+        bot.upload_photo(
+        os.path.join(os.getcwd(), 'images', '3850.jpg'), caption="Nice pic!")
+    
