@@ -46,12 +46,15 @@ def download_content(link, id):
 if __name__ == "__main__":
     Path(os.getcwd(), 'images').mkdir(parents=True, exist_ok=True)
     ids = parse_ids()
-    id = 4001
-    #for id in ids:
-    links = parse_link_hubble(id)
-    link = choice_better_img(links)
-    filename_extension = link.split('.')[-1]
-    download_content(link, id)
-    image = Image.open(f"images/{id}.{filename_extension}")
-    image.thumbnail((1080, 1080))
-    image.save(f"images/{id}.png")
+    for id in ids:
+        links = parse_link_hubble(id)
+        link = choice_better_img(links)
+        filename_extension = link.split('.')[-1]
+        download_content(link, id)
+        image = Image.open(f"images/{id}.{filename_extension}")
+        image.thumbnail((1080, 1080))
+        if image.format == 'PNG':
+            image = image.convert("RGB")
+            path = os.path.join(os.getcwd(), 'images', f'{id}.png')
+            os.remove(path)
+        image.save(f"images/{id}.jpg")
