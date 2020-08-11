@@ -3,7 +3,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 import requests
 from PIL import Image
-
+import instabot
 
 def parse_ids():
     url = 'http://hubblesite.org/api/v3/images/wallpaper'
