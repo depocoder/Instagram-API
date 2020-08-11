@@ -7,9 +7,7 @@
 ## Подготовка к запуску.  
 Установить библиотеки командой.  
 ```
-pip install -r requirements.txt  
-
-....   
+pip install -r requirements.txt
 ```
     
 Зарегистрируйтесь в [instagram](https://www.instagram.com/accounts/emailsignup/).    
