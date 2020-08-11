@@ -1,33 +1,44 @@
 import os
 from pathlib import Path
+from random import choice
 from urllib.parse import urljoin
 import requests
 
 
-def parse_links():
-    url = 'https://api.spacexdata.com/v4/launches/latest'
+def parse_ids():
+    url = 'http://hubblesite.org/api/v3/images/wallpaper'
     response = requests.get(url)
-    return response.json()['links']["flickr"]['original']
+    response.raise_for_status()
+    ids = []
+    for id in response.json():
+        ids.append(id['id']) 
+    return ids
 
 
-def parse_links_hubble():
-    url = 'http://hubblesite.org/api/v3/image/1'
+def parse_link_hubble(id):
+    url = f'http://hubblesite.org/api/v3/image/{id}'
     response = requests.get(url)
-    return response.json()["image_files"]
+    response.raise_for_status()
+    links = response.json()["image_files"]
+    link = choice(links)['file_url'].split(
+        'imgsrc.hubblesite.org/hvi/uploads/')
+    return urljoin('https://media.stsci.edu/uploads/', link[1])
+     
 
-
-def fetch_spacex_last_launch(num_pic, link):
+def download_content(link, id):
     response = requests.get(link)
-    folder = os.path.join(os.getcwd(), 'images', f"spacex{num_pic}.jpg")
+    response.raise_for_status()
+    filename_extension = link.split('.')[-1]
+    folder = os.path.join(os.getcwd(), 'images', f"{id}.{filename_extension}")
     with open(folder, 'wb') as file:
         return file.write(response.content)
 
 
 if __name__ == "__main__":
-    base_url = 'https://api.spacexdata.com/v3'
     Path(os.getcwd(), 'images').mkdir(parents=True, exist_ok=True)
-    for num_pic, link in enumerate(parse_links(), 1):
-        fetch_spacex_last_launch(num_pic, link)
-    for link in parse_links_hubble():
-        link = link['file_url'].split('imgsrc.hubblesite.org/hvi/uploads/')
-        print(urljoin('https://media.stsci.edu/uploads/', link[1]))
+    #for num_pic, link in enumerate(parse_links(), 1):
+        #fetch_spacex_last_launch(num_pic, link)
+    ids = parse_ids()
+    for id in ids:
+        link = parse_link_hubble(id)
+        download_content(link, id)
