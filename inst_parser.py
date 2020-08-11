@@ -9,9 +9,7 @@ def parse_ids():
     url = 'http://hubblesite.org/api/v3/images/wallpaper'
     response = requests.get(url)
     response.raise_for_status()
-    ids = []
-    for id in response.json():
-        ids.append(id['id']) 
+    ids = [id['id'] for id in response.json()]
     return ids
 
 
