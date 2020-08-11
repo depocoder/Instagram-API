@@ -76,11 +76,13 @@ def upload_photo(id, filename_extension):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='')
+    parser = argparse.ArgumentParser(
+        description='''Этот проект позволяет загружать в
+        инстаграм фото сделанные спутником Hubble.''')
     parser.add_argument('--username', nargs='?',
-                        help='')
+                        help='Ваш логин.')
     parser.add_argument('--password', nargs='?',
-                        help='')
+                        help='Ваш пароль.')
 
     args = parser.parse_args()
     bot = Bot()
