@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from urllib.parse import urljoin
 import requests
 
 
@@ -27,4 +28,6 @@ if __name__ == "__main__":
     Path(os.getcwd(), 'images').mkdir(parents=True, exist_ok=True)
     for num_pic, link in enumerate(parse_links(), 1):
         fetch_spacex_last_launch(num_pic, link)
-    print(parse_links_hubble())
+    for link in parse_links_hubble():
+        link = link['file_url'].split('imgsrc.hubblesite.org/hvi/uploads/')
+        print(urljoin('https://media.stsci.edu/uploads/', link[1]))
