@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import argparse
+import shutil
 from io import open
 from urllib.parse import urljoin
 import requests
@@ -93,4 +94,4 @@ if __name__ == "__main__":
         download_content(link, id)
         upload_photo(id, filename_extension)
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'images')
-    os.rmdir(path)
+    shutil.rmtree(path)
