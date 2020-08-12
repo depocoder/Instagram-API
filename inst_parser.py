@@ -28,9 +28,9 @@ def parse_link_hubble(pic_id):
 def choice_better_img(links):
     max_size = 0
     for num_link, link in enumerate(links):
-        filename_extension = link['file_url'].split('.')[-1]
+        filename_extension = os.path.splitext(link['file_url'])[-1]
         if link['file_size'] > max_size and (
-                filename_extension == 'jpg' or filename_extension == 'png'):
+                filename_extension == '.jpg' or filename_extension == '.png'):
             max_size = link['file_size']
             max_num = num_link
     link = links[max_num]['file_url'].split(
@@ -38,11 +38,10 @@ def choice_better_img(links):
     return urljoin('https://media.stsci.edu/uploads/', link[1])
 
 
-def download_content(link, pic_id):
+def download_content(link, pic_id, filename_extension):
     response = requests.get(link)
     response.raise_for_status()
-    filename_extension = link.split('.')[-1]
-    folder = os.path.join(os.getcwd(), 'images', f"{pic_id}.{filename_extension}")
+    folder = os.path.join(os.getcwd(), 'images', f"{pic_id}{filename_extension}")
     with open(folder, 'wb') as file:
         return file.write(response.content)
 
@@ -58,7 +57,7 @@ def calculate_the_size(width, height):
 
 
 def upload_photo(pic_id, filename_extension):
-    image = Image.open(f"images/{pic_id}.{filename_extension}")
+    image = Image.open(f"images/{pic_id}{filename_extension}")
     image.thumbnail((1080, 1080))
     if image.format == 'PNG':
         image = image.convert("RGB")
@@ -92,8 +91,8 @@ if __name__ == "__main__":
     for pic_id in ids:
         links = parse_link_hubble(pic_id)
         link = choice_better_img(links)
-        filename_extension = link.split('.')[-1]
-        download_content(link, pic_id)
+        filename_extension = os.path.splitext(link)[-1]
+        download_content(link, pic_id, filename_extension)
         upload_photo(pic_id, filename_extension)
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'images')
     shutil.rmtree(path)
