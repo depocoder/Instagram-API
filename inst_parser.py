@@ -9,16 +9,16 @@ from PIL import Image
 from instabot import Bot
 
 
-def parse_ids():
+def get_ids():
     url = 'http://hubblesite.org/api/v3/images/wallpaper'
     response = requests.get(url)
     response.raise_for_status()
-    ids = [pic_id['id'] for pic_id in response.json()]
-    return ids
+    image_ids = [image_id['id'] for image_id in response.json()]
+    return image_ids
 
 
-def parse_link_hubble(pic_id):
-    url = f'http://hubblesite.org/api/v3/image/{pic_id}'
+def get_link_hubble(image_id):
+    url = f'http://hubblesite.org/api/v3/image/{image_id}'
     response = requests.get(url)
     response.raise_for_status()
     links = response.json()["image_files"]
@@ -33,15 +33,15 @@ def choice_better_img(links):
                 filename_extension in ['.jpg', '.png']):
             max_size = link['file_size']
             max_num = num_link
-    link = links[max_num]['file_url'].split(
+    link_parts = links[max_num]['file_url'].split(
         'imgsrc.hubblesite.org/hvi/uploads/')
-    return urljoin('https://media.stsci.edu/uploads/', link[1])
+    return urljoin('https://media.stsci.edu/uploads/', link_parts[1])
 
 
-def download_content(link, pic_id, filename_extension):
+def download_content(link, image_id, filename_extension):
     response = requests.get(link)
     response.raise_for_status()
-    folder = os.path.join(os.getcwd(), 'images', f"{pic_id}{filename_extension}")
+    folder = os.path.join(os.getcwd(), 'images', f"{image_id}{filename_extension}")
     with open(folder, 'wb') as file:
         return file.write(response.content)
 
@@ -65,17 +65,17 @@ def crop_photo(image):
     return image.crop(coordinates)
 
 
-def upload_photo(pic_id, filename_extension):
-    image = Image.open(f"images/{pic_id}{filename_extension}")
+def upload_photo(image_id, filename_extension):
+    image = Image.open(f"images/{image_id}{filename_extension}")
     image.thumbnail((1080, 1080))
     if image.format == 'PNG':
         image = image.convert("RGB")
-        path = os.path.join(os.getcwd(), 'images', f'{pic_id}.png')
+        path = os.path.join(os.getcwd(), 'images', f'{image_id}.png')
         os.remove(path)
     image = crop_photo(image)
-    image.save(f"images/{pic_id}.jpg")
+    image.save(f"images/{image_id}.jpg")
     return bot.upload_photo(
-        os.path.join(os.getcwd(), 'images', f'{pic_id}.jpg'), caption="Nice pic!")
+        os.path.join(os.getcwd(), 'images', f'{image_id}.jpg'), caption="Nice pic!")
 
 
 if __name__ == "__main__":
@@ -91,12 +91,12 @@ if __name__ == "__main__":
     bot = Bot()
     bot.login(username=args.username, password=args.password)
     Path(os.getcwd(), 'images').mkdir(parents=True, exist_ok=True)
-    ids = parse_ids()
-    for pic_id in ids:
-        links = parse_link_hubble(pic_id)
+    image_ids = get_ids()
+    for image_id in image_ids:
+        links = get_link_hubble(image_id)
         link = choice_better_img(links)
         filename_extension = os.path.splitext(link)[-1]
-        download_content(link, pic_id, filename_extension)
-        upload_photo(pic_id, filename_extension)
+        download_content(link, image_id, filename_extension)
+        upload_photo(image_id, filename_extension)
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'images')
     shutil.rmtree(path)
