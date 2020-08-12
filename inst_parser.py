@@ -27,11 +27,11 @@ def get_link_hubble(image_id):
 
 def choice_better_img(links):
     max_size = 0
-    for num_link, link in enumerate(links):
-        filename_extension = os.path.splitext(link['file_url'])[-1]
-        if link['file_size'] > max_size and (
+    for num_link, image_info in enumerate(links):
+        filename_extension = os.path.splitext(image_info['file_url'])[-1]
+        if image_info['file_size'] > max_size and (
                 filename_extension in ['.jpg', '.png']):
-            max_size = link['file_size']
+            max_size = image_info['file_size']
             max_num = num_link
     link_parts = links[max_num]['file_url'].split(
         'imgsrc.hubblesite.org/hvi/uploads/')
