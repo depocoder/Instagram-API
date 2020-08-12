@@ -30,7 +30,7 @@ def choice_better_img(links):
     for num_link, link in enumerate(links):
         filename_extension = os.path.splitext(link['file_url'])[-1]
         if link['file_size'] > max_size and (
-                filename_extension == '.jpg' or filename_extension == '.png'):
+                filename_extension in ['.jpg', '.png']):
             max_size = link['file_size']
             max_num = num_link
     link = links[max_num]['file_url'].split(
