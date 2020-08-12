@@ -41,7 +41,8 @@ def choice_better_img(links):
 def download_content(link, image_id, filename_extension):
     response = requests.get(link)
     response.raise_for_status()
-    filename = os.path.join(os.getcwd(), 'images', f"{image_id}{filename_extension}")
+    filename = os.path.join(
+        os.getcwd(), 'images', f"{image_id}{filename_extension}")
     with open(filename, 'wb') as file:
         return file.write(response.content)
 
@@ -75,7 +76,8 @@ def upload_photo(image_id, filename_extension):
     image = crop_photo(image)
     image.save(f"images/{image_id}.jpg")
     return bot.upload_photo(
-        os.path.join(os.getcwd(), 'images', f'{image_id}.jpg'), caption="Nice pic!")
+        os.path.join(
+            os.getcwd(), 'images', f'{image_id}.jpg'), caption="Nice pic!")
 
 
 if __name__ == "__main__":
