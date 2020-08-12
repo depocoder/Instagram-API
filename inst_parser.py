@@ -10,7 +10,7 @@ from instabot import Bot
 
 
 def parse_ids():
-    url = 'http://hubblesite.org/api/v3/images/spacecraft'
+    url = 'http://hubblesite.org/api/v3/images/wallpaper'
     response = requests.get(url)
     response.raise_for_status()
     ids = [pic_id['id'] for pic_id in response.json()]
@@ -56,6 +56,15 @@ def calculate_the_size(width, height):
     return width, height
 
 
+def crop_photo(image):
+    crop_width, crop_height = calculate_the_size(
+        image.width, image.height)
+    coordinates = (
+        image.width - crop_width, image.height - crop_height,
+        image.width, image.height)
+    return image.crop(coordinates)
+
+
 def upload_photo(pic_id, filename_extension):
     image = Image.open(f"images/{pic_id}{filename_extension}")
     image.thumbnail((1080, 1080))
@@ -63,12 +72,7 @@ def upload_photo(pic_id, filename_extension):
         image = image.convert("RGB")
         path = os.path.join(os.getcwd(), 'images', f'{pic_id}.png')
         os.remove(path)
-    crop_width, crop_height = calculate_the_size(
-        image.width, image.height)
-    coordinates = (
-        image.width - crop_width, image.height - crop_height,
-        image.width, image.height)
-    image = image.crop(coordinates)
+    image = crop_photo(image)
     image.save(f"images/{pic_id}.jpg")
     return bot.upload_photo(
         os.path.join(os.getcwd(), 'images', f'{pic_id}.jpg'), caption="Nice pic!")
