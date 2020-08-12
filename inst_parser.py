@@ -41,8 +41,8 @@ def choice_better_img(links):
 def download_content(link, image_id, filename_extension):
     response = requests.get(link)
     response.raise_for_status()
-    folder = os.path.join(os.getcwd(), 'images', f"{image_id}{filename_extension}")
-    with open(folder, 'wb') as file:
+    filename = os.path.join(os.getcwd(), 'images', f"{image_id}{filename_extension}")
+    with open(filename, 'wb') as file:
         return file.write(response.content)
 
 
